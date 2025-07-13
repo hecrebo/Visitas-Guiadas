@@ -3,8 +3,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, MapPin, Plus, Edit, Trash2 } from "lucide-react";
+import { BookOpen, Users, MapPin, Plus, Edit, Trash2, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import AdminLogin from "./admin-login";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
   Table,
@@ -48,8 +50,22 @@ const courseFormSchema = insertCourseSchema.extend({
 
 export default function AdminPanel() {
   const { toast } = useToast();
+  const { isAuthenticated, logout } = useAuth();
   const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  
+  // Si no está autenticado, mostrar pantalla de login
+  if (!isAuthenticated) {
+    return <AdminLogin />;
+  }
+  
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Sesión cerrada",
+      description: "Has cerrado sesión del panel de administración",
+    });
+  };
 
   const { data: courseRegistrations = [], isLoading: courseRegLoading } = useQuery<CourseRegistration[]>({
     queryKey: ["/api/course-registrations"],
@@ -267,9 +283,19 @@ export default function AdminPanel() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Panel de Administración</h2>
-        <p className="text-gray-600">Gestiona inscripciones y registros</p>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Panel de Administración</h2>
+          <p className="text-gray-600">Gestiona inscripciones y registros</p>
+        </div>
+        <Button 
+          onClick={handleLogout}
+          variant="outline"
+          className="flex items-center space-x-2"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Cerrar Sesión</span>
+        </Button>
       </div>
 
       <Tabs defaultValue="course-registrations" className="space-y-6">
