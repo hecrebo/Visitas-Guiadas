@@ -17,6 +17,8 @@ export interface IStorage {
   getAllCourses(): Promise<Course[]>;
   getCourse(id: number): Promise<Course | undefined>;
   createCourse(course: InsertCourse): Promise<Course>;
+  updateCourse(id: number, course: Partial<InsertCourse>): Promise<Course | undefined>;
+  deleteCourse(id: number): Promise<boolean>;
 
   // Tours
   getAllTours(): Promise<Tour[]>;
@@ -171,6 +173,20 @@ export class MemStorage implements IStorage {
     const course: Course = { ...insertCourse, id };
     this.courses.set(id, course);
     return course;
+  }
+
+  async updateCourse(id: number, courseUpdate: Partial<InsertCourse>): Promise<Course | undefined> {
+    const course = this.courses.get(id);
+    if (course) {
+      const updatedCourse = { ...course, ...courseUpdate };
+      this.courses.set(id, updatedCourse);
+      return updatedCourse;
+    }
+    return undefined;
+  }
+
+  async deleteCourse(id: number): Promise<boolean> {
+    return this.courses.delete(id);
   }
 
   // Tours

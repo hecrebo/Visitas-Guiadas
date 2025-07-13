@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, MapPin } from "lucide-react";
+import { BookOpen, Users, MapPin, Plus, Edit, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
@@ -15,10 +15,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { insertCourseSchema } from "@shared/schema";
+import { z } from "zod";
 import type { CourseRegistration, TourRegistration, Course } from "@shared/schema";
+
+const courseFormSchema = insertCourseSchema.extend({
+  name: z.string().min(1, "El nombre es requerido"),
+  description: z.string().min(1, "La descripción es requerida"),
+  date: z.string().min(1, "La fecha es requerida"),
+  capacity: z.number().min(1, "La capacidad debe ser mayor a 0"),
+  imageUrl: z.string().url("Debe ser una URL válida"),
+});
 
 export default function AdminPanel() {
   const { toast } = useToast();
+  const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
 
   const { data: courseRegistrations = [], isLoading: courseRegLoading } = useQuery<CourseRegistration[]>({
     queryKey: ["/api/course-registrations"],
@@ -31,6 +62,102 @@ export default function AdminPanel() {
   const { data: courses = [] } = useQuery<Course[]>({
     queryKey: ["/api/courses"],
   });
+
+  const courseForm = useForm<z.infer<typeof courseFormSchema>>({
+    resolver: zodResolver(courseFormSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      date: "",
+      capacity: 15,
+      imageUrl: "",
+    },
+  });
+
+  const createCourseMutation = useMutation({
+    mutationFn: (course: z.infer<typeof courseFormSchema>) =>
+      apiRequest("POST", "/api/courses", course),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/courses"] });
+      toast({
+        title: "Curso creado",
+        description: "El curso ha sido creado exitosamente.",
+      });
+      courseForm.reset();
+      setIsAddCourseOpen(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "No se pudo crear el curso.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updateCourseMutation = useMutation({
+    mutationFn: ({ id, course }: { id: number; course: z.infer<typeof courseFormSchema> }) =>
+      apiRequest("PATCH", `/api/courses/${id}`, course),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/courses"] });
+      toast({
+        title: "Curso actualizado",
+        description: "El curso ha sido actualizado exitosamente.",
+      });
+      courseForm.reset();
+      setEditingCourse(null);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el curso.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteCourseMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("DELETE", `/api/courses/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/courses"] });
+      toast({
+        title: "Curso eliminado",
+        description: "El curso ha sido eliminado exitosamente.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el curso.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEditCourse = (course: Course) => {
+    setEditingCourse(course);
+    courseForm.reset({
+      name: course.name,
+      description: course.description,
+      date: course.date,
+      capacity: course.capacity,
+      imageUrl: course.imageUrl,
+    });
+  };
+
+  const handleDeleteCourse = (id: number) => {
+    if (window.confirm("¿Estás seguro de que quieres eliminar este curso?")) {
+      deleteCourseMutation.mutate(id);
+    }
+  };
+
+  const onCourseSubmit = (values: z.infer<typeof courseFormSchema>) => {
+    if (editingCourse) {
+      updateCourseMutation.mutate({ id: editingCourse.id, course: values });
+    } else {
+      createCourseMutation.mutate(values);
+    }
+  };
 
   const updateCourseRegistrationMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
@@ -149,6 +276,7 @@ export default function AdminPanel() {
         <TabsList>
           <TabsTrigger value="course-registrations">Inscripciones de Cursos</TabsTrigger>
           <TabsTrigger value="tour-registrations">Reservas de Visitas</TabsTrigger>
+          <TabsTrigger value="course-management">Gestión de Cursos</TabsTrigger>
           <TabsTrigger value="statistics">Estadísticas</TabsTrigger>
         </TabsList>
 
@@ -304,6 +432,265 @@ export default function AdminPanel() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="course-management">
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold text-gray-900">Gestión de Cursos</h3>
+              <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-green-600 hover:bg-green-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Agregar Curso
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Agregar Nuevo Curso</DialogTitle>
+                  </DialogHeader>
+                  <Form {...courseForm}>
+                    <form onSubmit={courseForm.handleSubmit(onCourseSubmit)} className="space-y-4">
+                      <FormField
+                        control={courseForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nombre del Curso</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Nombre del curso" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={courseForm.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Descripción</FormLabel>
+                            <FormControl>
+                              <Textarea placeholder="Descripción del curso" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={courseForm.control}
+                        name="date"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Fecha</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Fecha del curso" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={courseForm.control}
+                        name="capacity"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Capacidad</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Capacidad máxima" 
+                                {...field} 
+                                onChange={e => field.onChange(parseInt(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={courseForm.control}
+                        name="imageUrl"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>URL de la Imagen</FormLabel>
+                            <FormControl>
+                              <Input placeholder="https://..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex space-x-3 pt-4">
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => setIsAddCourseOpen(false)} 
+                          className="flex-1"
+                        >
+                          Cancelar
+                        </Button>
+                        <Button 
+                          type="submit" 
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                          disabled={createCourseMutation.isPending}
+                        >
+                          Crear Curso
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            <Card>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Nombre</TableHead>
+                        <TableHead>Descripción</TableHead>
+                        <TableHead>Fecha</TableHead>
+                        <TableHead>Capacidad</TableHead>
+                        <TableHead>Acciones</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {courses.map((course) => (
+                        <TableRow key={course.id}>
+                          <TableCell className="font-medium">{course.name}</TableCell>
+                          <TableCell className="max-w-xs truncate">{course.description}</TableCell>
+                          <TableCell>{course.date}</TableCell>
+                          <TableCell>{course.capacity}</TableCell>
+                          <TableCell>
+                            <div className="flex space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleEditCourse(course)}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDeleteCourse(course.id)}
+                                disabled={deleteCourseMutation.isPending}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Edit Course Dialog */}
+          <Dialog open={editingCourse !== null} onOpenChange={() => setEditingCourse(null)}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Editar Curso</DialogTitle>
+              </DialogHeader>
+              <Form {...courseForm}>
+                <form onSubmit={courseForm.handleSubmit(onCourseSubmit)} className="space-y-4">
+                  <FormField
+                    control={courseForm.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nombre del Curso</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Nombre del curso" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={courseForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Descripción</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Descripción del curso" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={courseForm.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fecha</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Fecha del curso" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={courseForm.control}
+                    name="capacity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Capacidad</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            placeholder="Capacidad máxima" 
+                            {...field} 
+                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={courseForm.control}
+                    name="imageUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>URL de la Imagen</FormLabel>
+                        <FormControl>
+                          <Input placeholder="https://..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex space-x-3 pt-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={() => setEditingCourse(null)} 
+                      className="flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                      disabled={updateCourseMutation.isPending}
+                    >
+                      Actualizar Curso
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="statistics">

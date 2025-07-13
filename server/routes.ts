@@ -3,7 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   insertCourseRegistrationSchema,
-  insertTourRegistrationSchema
+  insertTourRegistrationSchema,
+  insertCourseSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -28,6 +29,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(course);
     } catch (error) {
       res.status(500).json({ message: "Error fetching course" });
+    }
+  });
+
+  app.post("/api/courses", async (req, res) => {
+    try {
+      const validatedData = insertCourseSchema.parse(req.body);
+      const course = await storage.createCourse(validatedData);
+      res.status(201).json(course);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error creating course" });
+    }
+  });
+
+  app.patch("/api/courses/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const validatedData = insertCourseSchema.partial().parse(req.body);
+      const course = await storage.updateCourse(id, validatedData);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      res.json(course);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error updating course" });
+    }
+  });
+
+  app.delete("/api/courses/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const deleted = await storage.deleteCourse(id);
+      if (!deleted) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting course" });
     }
   });
 
