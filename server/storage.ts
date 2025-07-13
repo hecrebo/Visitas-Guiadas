@@ -70,25 +70,53 @@ export class MemStorage implements IStorage {
     // Initialize courses
     const defaultCourses: InsertCourse[] = [
       {
-        name: "Técnicas de Cocina Profesional",
-        description: "Aprende las técnicas fundamentales de la cocina profesional con chefs expertos.",
+        name: "Diseño Gráfico Básico",
+        description: "Aprende tipografía, teoría del color, composición y software especializado como Adobe Illustrator, Photoshop e InDesign.",
         date: "15 Mar 2024",
-        capacity: 12,
-        imageUrl: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+        capacity: 15,
+        imageUrl: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
       },
       {
-        name: "Marketing Digital Avanzado",
-        description: "Domina las estrategias más efectivas del marketing digital y redes sociales.",
+        name: "Marketing Digital",
+        description: "Domina SEO, SEM, Social Media Marketing, Email Marketing y analítica web con Google Analytics.",
         date: "22 Mar 2024",
         capacity: 20,
         imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
       },
       {
-        name: "Fotografía Profesional",
-        description: "Desarrolla tu ojo artístico y técnicas profesionales de fotografía.",
+        name: "Robótica Educativa",
+        description: "Programación de robots, diseño de mecanismos, electrónica básica e impresión 3D aplicada a la robótica.",
         date: "28 Mar 2024",
-        capacity: 8,
-        imageUrl: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+        capacity: 12,
+        imageUrl: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+      },
+      {
+        name: "Inteligencia Artificial para el Trabajo",
+        description: "Machine Learning, Deep Learning, Python para IA, TensorFlow y PyTorch para aplicaciones laborales.",
+        date: "05 Abr 2024",
+        capacity: 16,
+        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+      },
+      {
+        name: "Tecno Competencia para la Educación",
+        description: "Integración de TIC en el aula, diseño de materiales educativos digitales y gamificación educativa.",
+        date: "12 Abr 2024",
+        capacity: 18,
+        imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+      },
+      {
+        name: "Cableado Estructurado y Redes",
+        description: "Topologías de red, protocolos de comunicación, configuración de routers y switches, seguridad de redes.",
+        date: "19 Abr 2024",
+        capacity: 14,
+        imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
+      },
+      {
+        name: "Reparación de Equipos Informáticos",
+        description: "Hardware, software, mantenimiento preventivo y solución de problemas en equipos informáticos.",
+        date: "26 Abr 2024",
+        capacity: 10,
+        imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=200"
       }
     ];
 
