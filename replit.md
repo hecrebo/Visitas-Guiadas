@@ -137,3 +137,10 @@ The architecture emphasizes type safety, modern development practices, and a cle
   - Updated database schema with new fields for comprehensive visitor tracking
   - Redesigned admin panel to display all visitor information in organized table format
   - Form validation for all new fields with appropriate input types and constraints
+- **Data Export System**: Implemented comprehensive export functionality for administrative reporting
+  - PDF export with formatted tables using jsPDF and autotable plugin
+  - Excel export with structured data using XLSX library
+  - Export buttons integrated into both course registrations and tour reservations tables
+  - Localized headers and status translations for Spanish language
+  - Automatic file naming with descriptive titles
+  - Toast notifications for successful exports

@@ -3,10 +3,14 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Users, MapPin, Plus, Edit, Trash2, LogOut } from "lucide-react";
+import { BookOpen, Users, MapPin, Plus, Edit, Trash2, LogOut, Download, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import AdminLogin from "./admin-login";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
   Table,
@@ -271,6 +275,136 @@ function AdminPanelContent() {
     }
   };
 
+  // Export functions
+  const exportCourseRegistrationsToPDF = () => {
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(16);
+    doc.text('Fundacite Carabobo - Inscripciones de Cursos', 20, 20);
+    doc.setFontSize(10);
+    doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 20, 30);
+    
+    // Table data
+    const tableData = courseRegistrations.map(reg => [
+      getCourseName(reg.courseId),
+      reg.participantName,
+      reg.level,
+      reg.email,
+      reg.preferredDate,
+      reg.status === 'confirmed' ? 'Confirmado' : reg.status === 'pending' ? 'Pendiente' : 'Cancelado'
+    ]);
+    
+    (doc as any).autoTable({
+      head: [['Curso', 'Participante', 'Nivel', 'Email', 'Fecha Preferida', 'Estado']],
+      body: tableData,
+      startY: 40,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [59, 130, 246] }
+    });
+    
+    doc.save('inscripciones-cursos.pdf');
+    
+    toast({
+      title: "PDF generado",
+      description: "Las inscripciones de cursos se han exportado correctamente",
+    });
+  };
+
+  const exportTourRegistrationsToPDF = () => {
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(16);
+    doc.text('Fundacite Carabobo - Reservas de Visitas', 20, 20);
+    doc.setFontSize(10);
+    doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 20, 30);
+    
+    // Table data
+    const tableData = tourRegistrations.map(reg => [
+      `${reg.responsibleName} ${reg.responsibleLastName}`,
+      reg.cedula,
+      reg.gender,
+      `${reg.age} años`,
+      reg.email,
+      reg.phone,
+      reg.institution,
+      reg.preferredDate,
+      reg.numberOfPeople,
+      reg.status === 'confirmed' ? 'Confirmado' : reg.status === 'pending' ? 'Pendiente' : 'Cancelado'
+    ]);
+    
+    (doc as any).autoTable({
+      head: [['Responsable', 'Cédula', 'Sexo', 'Edad', 'Email', 'Teléfono', 'Institución', 'Fecha', 'Personas', 'Estado']],
+      body: tableData,
+      startY: 40,
+      styles: { fontSize: 7 },
+      headStyles: { fillColor: [59, 130, 246] }
+    });
+    
+    doc.save('reservas-visitas.pdf');
+    
+    toast({
+      title: "PDF generado",
+      description: "Las reservas de visitas se han exportado correctamente",
+    });
+  };
+
+  const exportCourseRegistrationsToExcel = () => {
+    const data = courseRegistrations.map(reg => ({
+      'Curso': getCourseName(reg.courseId),
+      'Participante': reg.participantName,
+      'Nivel': reg.level,
+      'Email': reg.email,
+      'Fecha Preferida': reg.preferredDate,
+      'Estado': reg.status === 'confirmed' ? 'Confirmado' : reg.status === 'pending' ? 'Pendiente' : 'Cancelado',
+      'Fecha de Registro': reg.registrationDate
+    }));
+    
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Inscripciones');
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'inscripciones-cursos.xlsx');
+    
+    toast({
+      title: "Excel generado",
+      description: "Las inscripciones de cursos se han exportado correctamente",
+    });
+  };
+
+  const exportTourRegistrationsToExcel = () => {
+    const data = tourRegistrations.map(reg => ({
+      'Nombre': reg.responsibleName,
+      'Apellido': reg.responsibleLastName,
+      'Cédula': reg.cedula,
+      'Sexo': reg.gender,
+      'Edad': reg.age,
+      'Email': reg.email,
+      'Teléfono': reg.phone,
+      'Institución': reg.institution,
+      'Fecha de Visita': reg.preferredDate,
+      'Número de Personas': reg.numberOfPeople,
+      'Estado': reg.status === 'confirmed' ? 'Confirmado' : reg.status === 'pending' ? 'Pendiente' : 'Cancelado',
+      'Fecha de Registro': reg.registrationDate
+    }));
+    
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Reservas');
+    
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'reservas-visitas.xlsx');
+    
+    toast({
+      title: "Excel generado",
+      description: "Las reservas de visitas se han exportado correctamente",
+    });
+  };
+
   // Statistics
   const activeCourses = courses.length;
   const totalCourseRegistrations = courseRegistrations.length;
@@ -304,8 +438,28 @@ function AdminPanelContent() {
         <TabsContent value="course-registrations">
           <Card>
             <CardContent className="p-0">
-              <div className="px-6 py-4 border-b border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Inscripciones de Cursos</h3>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={exportCourseRegistrationsToPDF}
+                    className="flex items-center space-x-2"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>PDF</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={exportCourseRegistrationsToExcel}
+                    className="flex items-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Excel</span>
+                  </Button>
+                </div>
               </div>
               <div className="overflow-x-auto">
                 {courseRegLoading ? (
@@ -381,8 +535,28 @@ function AdminPanelContent() {
         <TabsContent value="tour-registrations">
           <Card>
             <CardContent className="p-0">
-              <div className="px-6 py-4 border-b border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">Reservas de Visitas Guiadas</h3>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={exportTourRegistrationsToPDF}
+                    className="flex items-center space-x-2"
+                  >
+                    <FileText className="w-4 h-4" />
+                    <span>PDF</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={exportTourRegistrationsToExcel}
+                    className="flex items-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Excel</span>
+                  </Button>
+                </div>
               </div>
               <div className="overflow-x-auto">
                 {tourRegLoading ? (
