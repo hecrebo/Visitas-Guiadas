@@ -111,9 +111,10 @@ The architecture emphasizes type safety, modern development practices, and a cle
   - New "Gestión de Cursos" tab in admin panel with full create, edit, delete operations
   - Form validation with Zod schemas and real-time updates
   - API endpoints: POST /api/courses, PATCH /api/courses/:id, DELETE /api/courses/:id
-- **Social Media Integration**: Added comprehensive footer with social media links
-  - Facebook, Instagram, Twitter, YouTube, and LinkedIn links for Fundacite Carabobo
-  - Contact information including email, phone, and address
+- **Social Media Integration**: Added comprehensive footer with official social media links
+  - Updated to use official accounts from carabobo.fundacite.gob.ve website
+  - Facebook, Instagram, and TikTok links for Fundacite Carabobo
+  - Removed contact information (email/phone) per user request
   - Operating hours display and responsive design with hover effects
   - Added react-icons dependency for social media icons
 - **Interactive Calendar System**: Implemented comprehensive date selection functionality

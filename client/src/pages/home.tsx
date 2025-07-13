@@ -11,7 +11,7 @@ import {
   BookOpen,
   Menu
 } from "lucide-react";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import fundacyteLogo from "../assets/fundacyte-logo.png";
 import { useToast } from "@/hooks/use-toast";
 import CourseRegistrationModal from "@/components/course-registration-modal";
@@ -436,13 +436,13 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Contact Info */}
+            {/* Location */}
             <div className="flex flex-col items-center">
-              <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+              <h3 className="text-lg font-semibold mb-4">Ubicación</h3>
               <div className="space-y-2 text-sm text-gray-300 text-center">
-                <p>📧 info@fundacitecarabobo.gob.ve</p>
-                <p>📞 +58 241-8000000</p>
-                <p>📍 Valencia, Estado Carabobo</p>
+                <p>📍 Calle 137-A, Nº 137-B- Onsu</p>
+                <p>Diagonal al Centro Comercial Prebo</p>
+                <p>Municipio Valencia, Estado Carabobo</p>
               </div>
             </div>
 
@@ -451,7 +451,7 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
               <div className="flex space-x-4">
                 <a 
-                  href="https://www.facebook.com/fundacitecarabobo" 
+                  href="https://www.facebook.com/share/omWyMeawMiXzxUFP/?mibextid=qi2Omg" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-blue-500 transition-colors"
@@ -459,7 +459,7 @@ export default function Home() {
                   <FaFacebook size={24} />
                 </a>
                 <a 
-                  href="https://www.instagram.com/fundacitecarabobo" 
+                  href="https://www.instagram.com/fundacitecarabobo_oficial?igsh=MW85Y3RwNTNwamo2MA" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-pink-500 transition-colors"
@@ -467,28 +467,12 @@ export default function Home() {
                   <FaInstagram size={24} />
                 </a>
                 <a 
-                  href="https://twitter.com/fundacitecarabo" 
+                  href="https://www.tiktok.com/@fundacite.carabob?_t=8pDxChrSCgP&_r=1" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-blue-400 transition-colors"
+                  className="text-gray-300 hover:text-gray-100 transition-colors"
                 >
-                  <FaTwitter size={24} />
-                </a>
-                <a 
-                  href="https://www.youtube.com/channel/fundacitecarabobo" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-red-500 transition-colors"
-                >
-                  <FaYoutube size={24} />
-                </a>
-                <a 
-                  href="https://www.linkedin.com/company/fundacite-carabobo" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-blue-600 transition-colors"
-                >
-                  <FaLinkedin size={24} />
+                  <FaTiktok size={24} />
                 </a>
               </div>
             </div>
