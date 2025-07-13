@@ -36,6 +36,7 @@ type TabType = "courses" | "tours" | "admin";
 
 const tourRegistrationFormSchema = insertTourRegistrationSchema.extend({
   preferredDate: z.string().min(1, "La fecha es requerida"),
+  numberOfPeople: z.string().min(1, "El número de personas es requerido"),
 });
 
 export default function Home() {
@@ -316,20 +317,14 @@ export default function Home() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Número de Personas</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecciona cantidad" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="1">1 persona</SelectItem>
-                              <SelectItem value="2">2 personas</SelectItem>
-                              <SelectItem value="3">3 personas</SelectItem>
-                              <SelectItem value="4">4 personas</SelectItem>
-                              <SelectItem value="5+">5 o más personas</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="Ingresa el número de personas" 
+                              min="1"
+                              {...field} 
+                            />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
