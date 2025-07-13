@@ -300,7 +300,7 @@ export default function AdminPanel() {
                         <TableHead>Curso</TableHead>
                         <TableHead>Participante</TableHead>
                         <TableHead>Email</TableHead>
-                        <TableHead>Fecha Inscripción</TableHead>
+                        <TableHead>Fecha Preferida</TableHead>
                         <TableHead>Estado</TableHead>
                         <TableHead>Acciones</TableHead>
                       </TableRow>
@@ -318,7 +318,7 @@ export default function AdminPanel() {
                             <div className="text-sm text-gray-500">{registration.level}</div>
                           </TableCell>
                           <TableCell className="text-gray-500">{registration.email}</TableCell>
-                          <TableCell className="text-gray-500">{registration.registrationDate}</TableCell>
+                          <TableCell className="text-gray-500">{registration.preferredDate}</TableCell>
                           <TableCell>{getStatusBadge(registration.status)}</TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
@@ -484,7 +484,7 @@ export default function AdminPanel() {
                           <FormItem>
                             <FormLabel>Fecha</FormLabel>
                             <FormControl>
-                              <Input placeholder="Fecha del curso" {...field} />
+                              <Input placeholder="Ej: 15-20 de Enero, 2025" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -633,7 +633,7 @@ export default function AdminPanel() {
                       <FormItem>
                         <FormLabel>Fecha</FormLabel>
                         <FormControl>
-                          <Input placeholder="Fecha del curso" {...field} />
+                          <Input placeholder="Ej: 15-20 de Enero, 2025" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

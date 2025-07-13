@@ -32,6 +32,7 @@ export const courseRegistrations = pgTable("course_registrations", {
   email: text("email").notNull(),
   phone: text("phone").notNull(),
   level: text("level").notNull(),
+  preferredDate: text("preferred_date").notNull(),
   status: text("status").notNull().default("pending"), // pending, confirmed, cancelled
   registrationDate: text("registration_date").notNull(),
 });

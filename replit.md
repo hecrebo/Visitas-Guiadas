@@ -116,3 +116,10 @@ The architecture emphasizes type safety, modern development practices, and a cle
   - Contact information including email, phone, and address
   - Operating hours display and responsive design with hover effects
   - Added react-icons dependency for social media icons
+- **Interactive Calendar System**: Implemented comprehensive date selection functionality
+  - Created custom DatePicker component with Spanish localization using date-fns
+  - Integrated calendar into both course registration and tour booking forms
+  - Added business logic: weekends and past dates are disabled (Monday-Friday only)
+  - Enhanced database schema with preferredDate field for course registrations
+  - Updated admin panel to display preferred dates in registration tables
+  - Added date-fns dependency for date formatting and localization

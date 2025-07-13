@@ -31,12 +31,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import type { Course, Tour } from "@shared/schema";
 
 type TabType = "courses" | "tours" | "admin";
 
 const tourRegistrationFormSchema = insertTourRegistrationSchema.extend({
-  preferredDate: z.string().min(1, "La fecha es requerida"),
+  preferredDate: z.date({
+    required_error: "Selecciona una fecha para la visita",
+  }),
   numberOfPeople: z.string().min(1, "El número de personas es requerido"),
 });
 
@@ -59,7 +64,7 @@ export default function Home() {
     resolver: zodResolver(tourRegistrationFormSchema),
     defaultValues: {
       tourType: "",
-      preferredDate: "",
+      preferredDate: undefined,
       numberOfPeople: "",
       responsibleName: "",
       email: "",
@@ -69,12 +74,19 @@ export default function Home() {
 
   const onTourSubmit = async (values: z.infer<typeof tourRegistrationFormSchema>) => {
     try {
-      await apiRequest("POST", "/api/tour-registrations", values);
+      // Convert date to ISO string for API submission
+      const submissionData = {
+        ...values,
+        preferredDate: format(values.preferredDate, "yyyy-MM-dd"),
+      };
+      
+      await apiRequest("POST", "/api/tour-registrations", submissionData);
       toast({
         title: "¡Reserva confirmada!",
         description: "Tu reserva de visita ha sido registrada correctamente.",
       });
       tourForm.reset();
+      queryClient.invalidateQueries({ queryKey: ["/api/tour-registrations"] });
     } catch (error) {
       toast({
         title: "Error",
@@ -309,7 +321,18 @@ export default function Home() {
                         <FormItem>
                           <FormLabel>Fecha Preferida</FormLabel>
                           <FormControl>
-                            <Input type="date" {...field} />
+                            <DatePicker
+                              date={field.value}
+                              onDateChange={field.onChange}
+                              placeholder="Selecciona la fecha de la visita"
+                              disabled={(date) => {
+                                // Disable weekends and past dates
+                                const today = new Date();
+                                today.setHours(0, 0, 0, 0);
+                                const dayOfWeek = date.getDay();
+                                return date < today || dayOfWeek === 0 || dayOfWeek === 6;
+                              }}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

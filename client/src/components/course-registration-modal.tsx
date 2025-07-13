@@ -21,6 +21,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DatePicker } from "@/components/ui/date-picker";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import type { Course } from "@shared/schema";
 
 interface CourseRegistrationModalProps {
@@ -34,6 +37,9 @@ const courseRegistrationFormSchema = insertCourseRegistrationSchema.extend({
   email: z.string().email("Email inválido"),
   phone: z.string().min(1, "El teléfono es requerido"),
   level: z.string().min(1, "El nivel es requerido"),
+  preferredDate: z.date({
+    required_error: "Selecciona una fecha preferida",
+  }),
 });
 
 export default function CourseRegistrationModal({ course, isOpen, onClose }: CourseRegistrationModalProps) {
@@ -47,6 +53,7 @@ export default function CourseRegistrationModal({ course, isOpen, onClose }: Cou
       email: "",
       phone: "",
       level: "",
+      preferredDate: undefined,
     },
   });
 
@@ -57,7 +64,13 @@ export default function CourseRegistrationModal({ course, isOpen, onClose }: Cou
 
   const onSubmit = async (values: z.infer<typeof courseRegistrationFormSchema>) => {
     try {
-      await apiRequest("POST", "/api/course-registrations", values);
+      // Convert date to ISO string for API submission
+      const submissionData = {
+        ...values,
+        preferredDate: format(values.preferredDate, "yyyy-MM-dd"),
+      };
+      
+      await apiRequest("POST", "/api/course-registrations", submissionData);
       toast({
         title: "¡Inscripción exitosa!",
         description: "Tu inscripción al curso ha sido registrada correctamente.",
@@ -151,6 +164,31 @@ export default function CourseRegistrationModal({ course, isOpen, onClose }: Cou
                       <SelectItem value="avanzado">Avanzado</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="preferredDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fecha Preferida</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      date={field.value}
+                      onDateChange={field.onChange}
+                      placeholder="Selecciona tu fecha preferida"
+                      disabled={(date) => {
+                        // Disable weekends and past dates
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const dayOfWeek = date.getDay();
+                        return date < today || dayOfWeek === 0 || dayOfWeek === 6;
+                      }}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
