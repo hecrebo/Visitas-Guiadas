@@ -128,10 +128,6 @@ export default function AdminPanel() {
     switch (type) {
       case "weekday":
         return "Lunes a Viernes";
-      case "saturday":
-        return "Sábado con taller";
-      case "sunday":
-        return "Domingo familiar";
       default:
         return type;
     }

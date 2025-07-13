@@ -103,18 +103,6 @@ export class MemStorage implements IStorage {
         schedule: "08:00 - 13:00",
         description: "Visita completa de instalaciones",
         capacity: 15
-      },
-      {
-        type: "saturday",
-        schedule: "08:00 - 13:00",
-        description: "Visita especializada + taller",
-        capacity: 10
-      },
-      {
-        type: "sunday",
-        schedule: "08:00 - 13:00",
-        description: "Visita familiar",
-        capacity: 20
       }
     ];
 

@@ -91,10 +91,6 @@ export default function Home() {
     switch (type) {
       case "weekday":
         return "Lunes a Viernes (08:00-13:00)";
-      case "saturday":
-        return "Sábado con taller (08:00-13:00)";
-      case "sunday":
-        return "Domingo familiar (08:00-13:00)";
       default:
         return type;
     }
@@ -261,8 +257,6 @@ export default function Home() {
                         <div>
                           <span className="font-medium text-gray-900">
                             {tour.type === "weekday" && "Lunes a Viernes"}
-                            {tour.type === "saturday" && "Sábados"}
-                            {tour.type === "sunday" && "Domingos"}
                           </span>
                           <p className="text-sm text-gray-600">{tour.description}</p>
                         </div>
@@ -295,8 +289,6 @@ export default function Home() {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="weekday">Lunes a Viernes (08:00-13:00)</SelectItem>
-                              <SelectItem value="saturday">Sábado con taller (08:00-13:00)</SelectItem>
-                              <SelectItem value="sunday">Domingo familiar (08:00-13:00)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
