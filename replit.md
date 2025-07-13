@@ -103,3 +103,16 @@ Located in `shared/schema.ts`, defines five main entities:
 - Replit-specific configurations for cloud deployment
 
 The architecture emphasizes type safety, modern development practices, and a clean separation between frontend and backend concerns while sharing common types and validation schemas.
+
+## Recent Changes
+
+### January 2025
+- **Course Management System**: Added complete CRUD functionality for managing courses from admin panel
+  - New "Gestión de Cursos" tab in admin panel with full create, edit, delete operations
+  - Form validation with Zod schemas and real-time updates
+  - API endpoints: POST /api/courses, PATCH /api/courses/:id, DELETE /api/courses/:id
+- **Social Media Integration**: Added comprehensive footer with social media links
+  - Facebook, Instagram, Twitter, YouTube, and LinkedIn links for Fundacite Carabobo
+  - Contact information including email, phone, and address
+  - Operating hours display and responsive design with hover effects
+  - Added react-icons dependency for social media icons

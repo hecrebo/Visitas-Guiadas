@@ -11,6 +11,7 @@ import {
   BookOpen,
   Menu
 } from "lucide-react";
+import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLinkedin } from "react-icons/fa";
 import fundacyteLogo from "../assets/fundacyte-logo.png";
 import { useToast } from "@/hooks/use-toast";
 import CourseRegistrationModal from "@/components/course-registration-modal";
@@ -396,6 +397,88 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
+      {/* Footer with Social Media */}
+      <footer className="bg-gray-900 text-white py-8 mt-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Logo and Info */}
+            <div className="flex flex-col items-center md:items-start">
+              <img src={fundacyteLogo} alt="Fundacite Carabobo" className="h-16 w-auto mb-4" />
+              <p className="text-gray-300 text-center md:text-left text-sm">
+                Centro de tecnología e innovación de Carabobo
+              </p>
+              <p className="text-gray-300 text-center md:text-left text-sm mt-2">
+                Horario: Lunes a Viernes 8:00 AM - 1:00 PM
+              </p>
+            </div>
+
+            {/* Contact Info */}
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+              <div className="space-y-2 text-sm text-gray-300 text-center">
+                <p>📧 info@fundacitecarabobo.gob.ve</p>
+                <p>📞 +58 241-8000000</p>
+                <p>📍 Valencia, Estado Carabobo</p>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="flex flex-col items-center md:items-end">
+              <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
+              <div className="flex space-x-4">
+                <a 
+                  href="https://www.facebook.com/fundacitecarabobo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-blue-500 transition-colors"
+                >
+                  <FaFacebook size={24} />
+                </a>
+                <a 
+                  href="https://www.instagram.com/fundacitecarabobo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-pink-500 transition-colors"
+                >
+                  <FaInstagram size={24} />
+                </a>
+                <a 
+                  href="https://twitter.com/fundacitecarabo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-blue-400 transition-colors"
+                >
+                  <FaTwitter size={24} />
+                </a>
+                <a 
+                  href="https://www.youtube.com/channel/fundacitecarabobo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-red-500 transition-colors"
+                >
+                  <FaYoutube size={24} />
+                </a>
+                <a 
+                  href="https://www.linkedin.com/company/fundacite-carabobo" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-blue-600 transition-colors"
+                >
+                  <FaLinkedin size={24} />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="border-t border-gray-700 mt-8 pt-6 text-center">
+            <p className="text-gray-400 text-sm">
+              © 2025 Fundacite Carabobo. Todos los derechos reservados.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
