@@ -48,16 +48,11 @@ const courseFormSchema = insertCourseSchema.extend({
   imageUrl: z.string().url("Debe ser una URL válida"),
 });
 
-export default function AdminPanel() {
+function AdminPanelContent() {
   const { toast } = useToast();
-  const { isAuthenticated, logout } = useAuth();
+  const { logout } = useAuth();
   const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
-  
-  // Si no está autenticado, mostrar pantalla de login
-  if (!isAuthenticated) {
-    return <AdminLogin />;
-  }
   
   const handleLogout = () => {
     logout();
@@ -761,4 +756,14 @@ export default function AdminPanel() {
       </Tabs>
     </div>
   );
+}
+
+export default function AdminPanel() {
+  const { isAuthenticated } = useAuth();
+  
+  if (!isAuthenticated) {
+    return <AdminLogin />;
+  }
+  
+  return <AdminPanelContent />;
 }
