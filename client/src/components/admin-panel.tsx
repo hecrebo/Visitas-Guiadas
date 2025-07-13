@@ -395,8 +395,10 @@ function AdminPanelContent() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Tipo de Visita</TableHead>
                         <TableHead>Responsable</TableHead>
+                        <TableHead>Información Personal</TableHead>
+                        <TableHead>Contacto</TableHead>
+                        <TableHead>Institución</TableHead>
                         <TableHead>Fecha</TableHead>
                         <TableHead>Personas</TableHead>
                         <TableHead>Estado</TableHead>
@@ -408,13 +410,19 @@ function AdminPanelContent() {
                         <TableRow key={registration.id}>
                           <TableCell>
                             <div className="font-medium text-gray-900">
-                              {getTourTypeLabel(registration.tourType)}
+                              {registration.responsibleName} {registration.responsibleLastName}
                             </div>
+                            <div className="text-sm text-gray-500">{registration.cedula}</div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-gray-900">{registration.responsibleName}</div>
-                            <div className="text-sm text-gray-500">{registration.email}</div>
+                            <div className="text-gray-900">{registration.gender}</div>
+                            <div className="text-sm text-gray-500">{registration.age} años</div>
                           </TableCell>
+                          <TableCell>
+                            <div className="text-gray-900">{registration.email}</div>
+                            <div className="text-sm text-gray-500">{registration.phone}</div>
+                          </TableCell>
+                          <TableCell className="text-gray-500">{registration.institution}</TableCell>
                           <TableCell className="text-gray-500">{registration.preferredDate}</TableCell>
                           <TableCell className="text-gray-500">{registration.numberOfPeople}</TableCell>
                           <TableCell>{getStatusBadge(registration.status)}</TableCell>

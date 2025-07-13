@@ -43,6 +43,14 @@ const tourRegistrationFormSchema = insertTourRegistrationSchema.extend({
     required_error: "Selecciona una fecha para la visita",
   }),
   numberOfPeople: z.string().min(1, "El número de personas es requerido"),
+  responsibleName: z.string().min(1, "El nombre es requerido"),
+  responsibleLastName: z.string().min(1, "El apellido es requerido"),
+  cedula: z.string().min(6, "La cédula debe tener al menos 6 caracteres"),
+  email: z.string().email("Debe ser un email válido"),
+  phone: z.string().min(10, "El teléfono debe tener al menos 10 dígitos"),
+  gender: z.string().min(1, "Selecciona el sexo"),
+  age: z.number().min(5, "La edad debe ser mayor a 5 años").max(100, "La edad debe ser menor a 100 años"),
+  institution: z.string().min(1, "La institución es requerida"),
 });
 
 export default function Home() {
@@ -67,8 +75,13 @@ export default function Home() {
       preferredDate: undefined,
       numberOfPeople: "",
       responsibleName: "",
+      responsibleLastName: "",
+      cedula: "",
       email: "",
       phone: "",
+      gender: "",
+      age: 0,
+      institution: "",
     },
   });
 
@@ -358,14 +371,44 @@ export default function Home() {
                       )}
                     />
 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={tourForm.control}
+                        name="responsibleName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nombre</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Tu nombre" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={tourForm.control}
+                        name="responsibleLastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Apellido</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Tu apellido" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={tourForm.control}
-                      name="responsibleName"
+                      name="cedula"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nombre del Responsable</FormLabel>
+                          <FormLabel>Cédula de Identidad</FormLabel>
                           <FormControl>
-                            <Input placeholder="Tu nombre completo" {...field} />
+                            <Input placeholder="V-12345678" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -386,19 +429,81 @@ export default function Home() {
                       )}
                     />
 
-                    <FormField
-                      control={tourForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Teléfono</FormLabel>
-                          <FormControl>
-                            <Input type="tel" placeholder="+34 600 000 000" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={tourForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Teléfono</FormLabel>
+                            <FormControl>
+                              <Input type="tel" placeholder="04XX-XXXXXXX" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={tourForm.control}
+                        name="gender"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Sexo</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecciona" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="masculino">Masculino</SelectItem>
+                                <SelectItem value="femenino">Femenino</SelectItem>
+                                <SelectItem value="otro">Otro</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={tourForm.control}
+                        name="age"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Edad</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Edad" 
+                                min="5"
+                                max="100"
+                                {...field} 
+                                onChange={e => field.onChange(parseInt(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={tourForm.control}
+                        name="institution"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Colegio/Institución</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Nombre del colegio o institución" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
                     <Button type="submit" className="w-full bg-secondary hover:bg-purple-800">
                       Reservar Visita

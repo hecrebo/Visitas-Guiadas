@@ -43,8 +43,13 @@ export const tourRegistrations = pgTable("tour_registrations", {
   preferredDate: text("preferred_date").notNull(),
   numberOfPeople: text("number_of_people").notNull(),
   responsibleName: text("responsible_name").notNull(),
+  responsibleLastName: text("responsible_last_name").notNull(),
+  cedula: text("cedula").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
+  gender: text("gender").notNull(), // masculino, femenino, otro
+  age: integer("age").notNull(),
+  institution: text("institution").notNull(), // colegio o institución
   status: text("status").notNull().default("pending"), // pending, confirmed, cancelled
   registrationDate: text("registration_date").notNull(),
 });

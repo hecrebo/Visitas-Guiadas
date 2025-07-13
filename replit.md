@@ -130,3 +130,10 @@ The architecture emphasizes type safety, modern development practices, and a cle
   - Login screen with password visibility toggle and validation
   - Logout button in admin panel header
   - Demo password: admin2025 (stored in localStorage for development)
+- **Enhanced Visitor Data Collection**: Expanded tour registration system to capture complete visitor information
+  - Added personal data fields: name, last name, ID number (cedula), gender, age
+  - Included contact information: email, phone number
+  - Added institutional information: school or organization name
+  - Updated database schema with new fields for comprehensive visitor tracking
+  - Redesigned admin panel to display all visitor information in organized table format
+  - Form validation for all new fields with appropriate input types and constraints
