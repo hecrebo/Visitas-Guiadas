@@ -1,0 +1,54 @@
+{
+  "name": "Fundacite Carabobo - Sistema de Inscripciones",
+  "short_name": "Fundacite Carabobo",
+  "description": "Sistema de inscripciones para cursos de tecnología y visitas guiadas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192x192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "es-VE",
+  "dir": "ltr",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Inscribir Curso",
+      "short_name": "Cursos",
+      "description": "Inscribirse en cursos de tecnología",
+      "url": "/?tab=courses",
+      "icons": [
+        {
+          "src": "/icon-192x192.svg",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Reservar Visita",
+      "short_name": "Visitas",
+      "description": "Reservar visita guiada",
+      "url": "/?tab=tours",
+      "icons": [
+        {
+          "src": "/icon-192x192.svg",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

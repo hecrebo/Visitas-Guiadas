@@ -144,3 +144,10 @@ The architecture emphasizes type safety, modern development practices, and a cle
   - Localized headers and status translations for Spanish language
   - Automatic file naming with descriptive titles
   - Toast notifications for successful exports
+- **Progressive Web App (PWA) Configuration**: Converted application to installable PWA
+  - Web App Manifest with complete metadata and icons
+  - Service Worker for offline functionality and caching
+  - PWA meta tags for mobile optimization
+  - Custom icons and branding for Fundacite Carabobo
+  - Installable shortcuts for courses and tours
+  - Optimized for mobile devices with proper viewport settings
