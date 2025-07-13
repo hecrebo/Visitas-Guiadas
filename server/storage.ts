@@ -100,19 +100,19 @@ export class MemStorage implements IStorage {
     const defaultTours: InsertTour[] = [
       {
         type: "weekday",
-        schedule: "10:00 - 11:30",
+        schedule: "08:00 - 13:00",
         description: "Visita completa de instalaciones",
         capacity: 15
       },
       {
         type: "saturday",
-        schedule: "09:00 - 12:00",
+        schedule: "08:00 - 13:00",
         description: "Visita especializada + taller",
         capacity: 10
       },
       {
         type: "sunday",
-        schedule: "11:00 - 12:00",
+        schedule: "08:00 - 13:00",
         description: "Visita familiar",
         capacity: 20
       }

@@ -90,11 +90,11 @@ export default function Home() {
   const getTourTypeLabel = (type: string) => {
     switch (type) {
       case "weekday":
-        return "Lunes a Viernes (10:00-11:30)";
+        return "Lunes a Viernes (08:00-13:00)";
       case "saturday":
-        return "Sábado con taller (09:00-12:00)";
+        return "Sábado con taller (08:00-13:00)";
       case "sunday":
-        return "Domingo familiar (11:00-12:00)";
+        return "Domingo familiar (08:00-13:00)";
       default:
         return type;
     }
@@ -294,9 +294,9 @@ export default function Home() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="weekday">Lunes a Viernes (10:00-11:30)</SelectItem>
-                              <SelectItem value="saturday">Sábado con taller (09:00-12:00)</SelectItem>
-                              <SelectItem value="sunday">Domingo familiar (11:00-12:00)</SelectItem>
+                              <SelectItem value="weekday">Lunes a Viernes (08:00-13:00)</SelectItem>
+                              <SelectItem value="saturday">Sábado con taller (08:00-13:00)</SelectItem>
+                              <SelectItem value="sunday">Domingo familiar (08:00-13:00)</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
