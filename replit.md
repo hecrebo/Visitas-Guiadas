@@ -1,8 +1,8 @@
-# Technology Training Center Registration System
+# Fundacite Carabobo Registration System
 
 ## Overview
 
-This is a full-stack web application for a technology training center that allows students to register for courses and guided tours. The system features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend API, and in-memory storage for development. The center operates from 8:00 AM to 1:00 PM, Monday through Friday only.
+This is a full-stack web application for Fundacite Carabobo that allows students to register for technology courses and guided tours. The system features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend API, and in-memory storage for development. The center operates from 8:00 AM to 1:00 PM, Monday through Friday only.
 
 ## User Preferences
 

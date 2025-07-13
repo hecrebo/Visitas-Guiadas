@@ -6,12 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Calendar, 
   Users, 
-  GraduationCap, 
   MapPin, 
   Settings,
   BookOpen,
   Menu
 } from "lucide-react";
+import fundacyteLogo from "../assets/fundacyte-logo.png";
 import { useToast } from "@/hooks/use-toast";
 import CourseRegistrationModal from "@/components/course-registration-modal";
 import AdminPanel from "@/components/admin-panel";
@@ -110,8 +110,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <GraduationCap className="text-primary text-2xl" />
-              <h1 className="text-xl font-semibold text-gray-900">Centro de Formación</h1>
+              <img 
+                src={fundacyteLogo} 
+                alt="Fundacyte Logo" 
+                className="h-12 w-auto"
+              />
+              <h1 className="text-xl font-semibold text-gray-900">Fundacite Carabobo</h1>
             </div>
             
             {/* Desktop Navigation */}
